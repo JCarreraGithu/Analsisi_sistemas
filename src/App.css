@@ -1,40 +1,25 @@
-/* Establecer el fondo de la página */
-body {
-  background: url("https://umg.edu.gt/img/cu/villanueva.webp") no-repeat center center fixed;
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  color: white; /* Hace que el texto sea más legible */
-  font-family: Arial, sans-serif;
-}
-
-/* Contenedor principal */
 .container {
-  max-width: 1200px;
-  margin: auto;
+  font-family: 'Arial', sans-serif;
   padding: 20px;
-  background: rgba(0, 0, 0, 0.7); /* Fondo semi-transparente */
-  border-radius: 10px;
+  background: linear-gradient(to bottom, #352112, #d9d9d9);
 }
 
-/* Título principal */
 h1 {
-  font-size: 24px;
   text-align: center;
+  color: #000000;
 }
 
-/* Estilos para las pestañas de navegación */
 .tabs {
   display: flex;
   justify-content: center;
-  margin-bottom: 15px;
+  margin-bottom: 20px;  
 }
 
 .tabs button {
-  background: #8b5a2b; /* Color café como en la imagen */
+  background-color: #704a35;
   color: white;
-  padding: 10px 15px;
-  margin: 5px;
+  padding: 10px 20px;
+  margin: 0 10px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -42,62 +27,57 @@ h1 {
 }
 
 .tabs button.active {
-  background: #d4a017; /* Amarillo dorado */
+  background-color: #a97253;
 }
 
-/* Cuadro de contenido */
 .content-box {
-  background: white;
-  padding: 15px;
-  border-radius: 10px;
-  color: black;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilos para la tabla */
+button.generar-pdf {
+  background-color: #edbc8b;
+  color: white;
+  padding: 10px 20px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button.generar-reporte {
+  background-color: #a6a6a6;
+  color: white;
+  padding: 10px 20px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 table {
   width: 100%;
+  margin-top: 20px;
   border-collapse: collapse;
 }
 
-thead {
-  background-color: #8b5a2b; /* Café */
-  color: white;
-}
-
-th, td {
-  padding: 10px;
+table th,
+table td {
+  padding: 12px;
   text-align: left;
-  border: 1px solid #ddd;
 }
 
-tbody tr:hover {
-  background-color: #f5f5f5;
+table th {
+  background-color: #352112;
+  color: #ffffff;
 }
 
-/* Estilos para el botón de generar PDF */
-.generar-pdf {
-  display: block;
-  margin: 20px auto;
-  background: #0096FF; /* Azul */
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  cursor: pointer;
-}
-.generar-Reporte{
-  display: block;
-  margin: 20px auto;
-  background: #0096FF; /* Azul */
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  cursor: pointer;
+table tr:nth-child(even) {
+  background-color: #a6a6a6;
 }
 
-.generar-pdf:hover {
-  background: #0077cc;
+table tr:hover {
+  background-color: #704a35;
 }
