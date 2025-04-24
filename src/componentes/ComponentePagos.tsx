@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { jsPDF } from "jspdf";
 import { obtenerPagos } from "../Services/ServicePago";
+import autoTable from "jspdf-autotable";
 
 interface Pago {
   noBoleta: number;
@@ -26,26 +27,76 @@ const ComponentePagos = () => {
     fetchPagos();
   }, []);
 
+
+
   // Función para generar PDF
   const generarPDF = () => {
     const doc = new jsPDF();
-    doc.text("Lista de Pagos", 10, 10);
 
-    let y = 20;
-    doc.text("Boleta  Operación  Correlativo  Fecha  Cliente  Tipo Pago  Moneda  MultaID  Total  Campo", 10, y);
-    y += 10;
+    // Logo de la universidad (si se quiere agregar)
+    // doc.addImage(logoURL, "JPEG", 10, 10, 50, 50);
 
-    pagos.forEach((pago) => {
-      doc.text(
-        `${pago.noBoleta}  ${pago.noOperacion}  ${pago.correlativo}  ${pago.fecha}  ${pago.cliente}  ${pago.tipPago}  ${pago.moneda}  ${pago.multaId}  ${pago.total}  ${pago.campo}`,
-        10,
-        y
-      );
-      y += 10;
+    // Título centrado
+    doc.setFontSize(18);
+    doc.text("Lista de Pagos", doc.internal.pageSize.getWidth() / 2, 20, { align: "center" });
+
+    // Espacio entre el título y la tabla
+    const startY = 40;
+
+    // Cabeceras de la tabla
+    const encabezados = [
+      [
+        "Boleta",
+        "Operación",
+        "Correlativo",
+        "Fecha",
+        "Cliente",
+        "Tipo Pago",
+        "Moneda",
+        "MultaID",
+        "Total",
+        "Campo",
+      ],
+    ];
+
+    // Cuerpo de la tabla (datos)
+    const datos = pagos.map((pago) => [
+      pago.noBoleta,
+      pago.noOperacion,
+      pago.correlativo,
+      pago.fecha,
+      pago.cliente,
+      pago.tipPago,
+      pago.moneda,
+      pago.multaId,
+      pago.total,
+      pago.campo,
+    ]);
+
+    // Estilos de la tabla y personalización de colores
+    autoTable(doc, {
+      startY,
+      head: encabezados,
+      body: datos,
+      styles: {
+        fontSize: 8,
+        textColor: "#000000",
+      },
+      headStyles: {
+        fillColor: "#704a35", // Marrón para los encabezados
+        textColor: "#ffffff", // Texto blanco
+        halign: "center",
+      },
+      alternateRowStyles: {
+        fillColor: "#edbc8b", // Color para filas alternas
+      },
+      theme: "striped",
+      margin: { top: 20 },
     });
 
-    doc.save("Pagos.pdf");
+    doc.save("Pagos-MIUMG.pdf");
   };
+
 
   // URL del Reporte de Power BI (Reemplaza con la URL real)
   const generarReportePowerBI = () => {
