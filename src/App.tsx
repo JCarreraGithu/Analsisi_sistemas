@@ -2,6 +2,7 @@
   import ComponentClientes from "./componentes/ComponenteClientes";
   import ComponenteParqueo from "./componentes/ComponenteParqueos";
   import ComponentePagos from "./componentes/ComponentePagos";
+  import ComponenteMultas from "./componentes/ComponenteMultas.tsx";
 
   import "./App.css"
   const App = () => {
@@ -16,7 +17,7 @@
         case "Permanencia":
           return <div>Componente de Permanencia</div>;
         case "Multas":
-          return <div>Componente de Multas</div>;
+          return <ComponenteMultas />;
         case "Clientes":
           return <ComponentClientes />;
         case "Pagos":
