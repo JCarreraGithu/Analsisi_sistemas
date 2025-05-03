@@ -30,7 +30,7 @@
       <div className="container">
         <h1>PARQUEO-UMG</h1>
         <div className="tabs">
-          {["Parqueos", "Multas", "Clientes", "Pagos"].map((tab) => (
+          {["Parqueos", "Multas", "Clientes ", "Pagos"].map((tab) => (
             <button key={tab} onClick={() => setActiveTab(tab)} className={activeTab === tab ? "active" : ""}>
               {tab}
             </button>
