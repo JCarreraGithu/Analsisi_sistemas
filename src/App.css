@@ -1,5 +1,13 @@
+
+@font-face {
+  font-family: 'Tabarra Sans';
+  src: url('../assets/fonts/TabarraSans.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .container {
-  font-family: 'Arial', sans-serif;
+  font-family: 'Tabarra Sans', sans-serif;
   padding: 20px;
   background: linear-gradient(to bottom, #352112, #d9d9d9);
 }
