@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3560/getData"; 
+
+//ip actualizada para que se conecte a la api de multas
+const API_URL = "http://192.168.182.177:3001/tipo_multa"; 
 
 export const obtenerMultas = async () => {
   try {

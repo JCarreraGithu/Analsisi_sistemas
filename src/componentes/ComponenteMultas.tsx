@@ -3,18 +3,15 @@ import { jsPDF } from "jspdf";
 import { obtenerMultas } from "../Services/ServiceMultas.ts";
 import autoTable from "jspdf-autotable";
 
-interface multa {
-  Id_multa: number;
-  USU_NombreUsuario: string;
-  Placa_Vehiculo: string;
-  Nombre_Multa: string;
-  Descripcion: string;
-  Monto: number;
-  Carnet_Cliente: string;
+// Adaptado a la estructura real del backend
+interface Multa {
+  TIP_MUL_ID: number;
+  TIP_MULTA_NOMBRE: string;
+  TIP_MUL_MONTO: number;
 }
 
 const ComponenteMultas = () => {
-  const [multas, setMultas] = useState<multa[]>([]);
+  const [multas, setMultas] = useState<Multa[]>([]);
 
   useEffect(() => {
     const fetchMultas = async () => {
@@ -24,107 +21,76 @@ const ComponenteMultas = () => {
     fetchMultas();
   }, []);
 
+  const logoURL =
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Escudo_de_la_universidad_Mariano_G%C3%A1lvez_Guatemala.svg/512px-Escudo_de_la_universidad_Mariano_G%C3%A1lvez_Guatemala.svg.png";
+  const marcaAguaURL =
+    "https://assets.isu.pub/document-structure/221119120331-2636df8d77a0399b11446057db0bdd7d/v1/ee86784e8c89885cab00d66e46522eaf.jpeg";
 
-
-  // Función para generar PDF
   const generarPDF = () => {
     const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
 
-    // Logo de la universidad (si se quiere agregar)
-    // doc.addImage(logoURL, "JPEG", 10, 10, 50, 50);
+    doc.addImage(logoURL, "JPEG", pageWidth - 30, 10, 20, 20);
+    doc.addImage(marcaAguaURL, "JPEG", pageWidth / 2 - 50, pageHeight / 2 - 50, 100, 100);
 
-    // Título centrado
     doc.setFontSize(18);
-    doc.text("Lista de Multas", doc.internal.pageSize.getWidth() / 2, 20, { align: "center" });
+    doc.text("Lista de Tipos de Multas", pageWidth / 2, 20, { align: "center" });
 
-    // Espacio entre el título y la tabla
     const startY = 40;
+    const encabezados = [["No. Multa", "Nombre de la Multa", "Monto (Q)"]];
+    const datos = multas.map((m) => [m.TIP_MUL_ID, m.TIP_MULTA_NOMBRE, m.TIP_MUL_MONTO]);
 
-    // Cabeceras de la tabla
-    const encabezados = [
-      [
-        "No.Multa",
-        "Nombre del Cliente",
-        "Placa del Vehiculo",
-        "Nombre de la Multa",
-        "Descripcion",
-        "Monto",
-        "Carnet del Cliente",
-        
-      ],
-    ];
-
-    // Cuerpo de la tabla (datos)
-    const datos = multas.map((multa) => [
-        multa.Id_multa,
-        multa.USU_NombreUsuario,
-        multa.Placa_Vehiculo,
-        multa.Nombre_Multa,
-        multa.Descripcion,
-        multa.Monto,
-        multa.Carnet_Cliente,
-    ]);
-
-    // Estilos de la tabla y personalización de colores
     autoTable(doc, {
       startY,
       head: encabezados,
       body: datos,
       styles: {
-        fontSize: 8,
+        fontSize: 10,
         textColor: "#000000",
       },
       headStyles: {
-        fillColor: "#704a35", // Marrón para los encabezados
-        textColor: "#ffffff", // Texto blanco
+        fillColor: "#704a35",
+        textColor: "#ffffff",
         halign: "center",
       },
       alternateRowStyles: {
-        fillColor: "#edbc8b", // Color para filas alternas
+        fillColor: "#edbc8b",
       },
       theme: "striped",
       margin: { top: 20 },
     });
 
-    doc.save("Multas-MIUMG.pdf");
+    doc.save("TiposDeMultas-MIUMG.pdf");
   };
 
-
-  // URL del Reporte de Power BI (Reemplaza con la URL real)
   const generarReportePowerBI = () => {
     window.open("https://app.powerbi.com/view?r=tu_reporte_id", "_blank");
   };
 
   return (
     <div>
-      <h2>Lista de Pagos</h2>
+      <h2>Listado de Tipos de Multas</h2>
       <table border={1} width="100%">
         <thead>
           <tr style={{ backgroundColor: "lightblue" }}>
             <th>No. Multa</th>
-            <th>Nombre del usuario</th>
-            <th>Placa del Vehiculo</th>
             <th>Nombre de la Multa</th>
-            <th>Descripcion</th>
-            <th>Monto</th>
-            <th>Carnet del Cliente</th>
+            <th>Monto (Q)</th>
           </tr>
         </thead>
         <tbody>
           {multas.length > 0 ? (
             multas.map((multa) => (
-              <tr key={multa.Id_multa}>
-                <td>{multa.USU_NombreUsuario}</td>
-                <td>{multa.Placa_Vehiculo}</td>
-                <td>{multa.Nombre_Multa}</td>
-                <td>{multa.Descripcion}</td>
-                <td>{multa.Monto}</td>
-                <td>{multa.Carnet_Cliente}</td>
+              <tr key={multa.TIP_MUL_ID}>
+                <td>{multa.TIP_MUL_ID}</td>
+                <td>{multa.TIP_MULTA_NOMBRE}</td>
+                <td>{multa.TIP_MUL_MONTO}</td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan={7}>No hay datos disponibles</td>
+              <td colSpan={3}>No hay datos disponibles</td>
             </tr>
           )}
         </tbody>
