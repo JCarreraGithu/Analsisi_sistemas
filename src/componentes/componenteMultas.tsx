@@ -1,27 +1,24 @@
 import { useEffect, useState } from "react";
 import { jsPDF } from "jspdf";
-import { obtenerPagos } from "../Services/ServicePago.ts";
+import { obtenerMultas } from "../Services/ServiceMultas.ts";
 import autoTable from "jspdf-autotable";
 
 // Adaptado a la estructura real del backend
-interface Pago {
-  ID_PAGO: number;
-  USU_NombreUsuario: string;
-  NO_BOLETA: string;
-  FECHA: string;
-  TIP_PAGO: string;
-  TOTAL: number;
+interface Multa {
+  TIP_MUL_ID: number;
+  TIP_MULTA_NOMBRE: string;
+  TIP_MUL_MONTO: number;
 }
 
-const ComponentePagos = () => {
-  const [pagos, setPagos] = useState<Pago[]>([]);
+const ComponenteMultas = () => {
+  const [multas, setMultas] = useState<Multa[]>([]);
 
   useEffect(() => {
-    const fetchPagos = async () => {
-      const data = await obtenerPagos();
-      setPagos(data);
+    const fetchMultas = async () => {
+      const data = await obtenerMultas();
+      setMultas(data);
     };
-    fetchPagos();
+    fetchMultas();
   }, []);
 
   const logoURL =
@@ -38,18 +35,11 @@ const ComponentePagos = () => {
     doc.addImage(marcaAguaURL, "JPEG", pageWidth / 2 - 50, pageHeight / 2 - 50, 100, 100);
 
     doc.setFontSize(18);
-    doc.text("Lista de Pagos", pageWidth / 2, 20, { align: "center" });
+    doc.text("Lista de Tipos de Multas", pageWidth / 2, 20, { align: "center" });
 
     const startY = 40;
-    const encabezados = [["No. Pago", "Nombre del Cliente", "No. Boleta", "Fecha", "Tipo de Pago", "Total (Q)"]];
-    const datos = pagos.map((pago) => [
-      pago.ID_PAGO,
-      pago.USU_NombreUsuario,
-      pago.NO_BOLETA,
-      pago.FECHA,
-      pago.TIP_PAGO,
-      pago.TOTAL,
-    ]);
+    const encabezados = [["No. Multa", "Nombre de la Multa", "Monto (Q)"]];
+    const datos = multas.map((m) => [m.TIP_MUL_ID, m.TIP_MULTA_NOMBRE, m.TIP_MUL_MONTO]);
 
     autoTable(doc, {
       startY,
@@ -71,7 +61,7 @@ const ComponentePagos = () => {
       margin: { top: 20 },
     });
 
-    doc.save("Pagos-MIUMG.pdf");
+    doc.save("TiposDeMultas-MIUMG.pdf");
   };
 
   const generarReportePowerBI = () => {
@@ -80,33 +70,27 @@ const ComponentePagos = () => {
 
   return (
     <div>
-      <h2>Listado de Pagos</h2>
+      <h2>Listado de Tipos de Multas</h2>
       <table border={1} width="100%">
         <thead>
           <tr style={{ backgroundColor: "lightblue" }}>
-            <th>No. Pago</th>
-            <th>Nombre del Cliente</th>
-            <th>No. Boleta</th>
-            <th>Fecha</th>
-            <th>Tipo de Pago</th>
-            <th>Total (Q)</th>
+            <th>No. Multa</th>
+            <th>Nombre de la Multa</th>
+            <th>Monto (Q)</th>
           </tr>
         </thead>
         <tbody>
-          {pagos.length > 0 ? (
-            pagos.map((pago) => (
-              <tr key={pago.ID_PAGO}>
-                <td>{pago.ID_PAGO}</td>
-                <td>{pago.USU_NombreUsuario}</td>
-                <td>{pago.NO_BOLETA}</td>
-                <td>{pago.FECHA}</td>
-                <td>{pago.TIP_PAGO}</td>
-                <td>{pago.TOTAL}</td>
+          {multas.length > 0 ? (
+            multas.map((multa) => (
+              <tr key={multa.TIP_MUL_ID}>
+                <td>{multa.TIP_MUL_ID}</td>
+                <td>{multa.TIP_MULTA_NOMBRE}</td>
+                <td>{multa.TIP_MUL_MONTO}</td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan={6}>No hay datos disponibles</td>
+              <td colSpan={3}>No hay datos disponibles</td>
             </tr>
           )}
         </tbody>
@@ -122,4 +106,4 @@ const ComponentePagos = () => {
   );
 };
 
-export default ComponentePagos;
+export default ComponenteMultas;
