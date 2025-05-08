@@ -13,8 +13,38 @@ interface Pago {
   TOTAL: number;
 }
 
+// Función para cargar imagen desde URL como base64
+const cargarImagenComoBase64 = (url: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.src = url;
+
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return reject("No se pudo obtener el contexto del canvas.");
+
+      // Pintar fondo blanco para evitar fondo negro al exportar JPEG
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.drawImage(img, 0, 0);
+      resolve(canvas.toDataURL("image/png")); // PNG mantiene transparencia
+    };
+
+    img.onerror = () => reject("Error al cargar la imagen.");
+  });
+};
+
 const ComponentePagos = () => {
   const [pagos, setPagos] = useState<Pago[]>([]);
+  const logoURL =
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Escudo_de_la_universidad_Mariano_G%C3%A1lvez_Guatemala.svg/1024px-Escudo_de_la_universidad_Mariano_G%C3%A1lvez_Guatemala.svg.png";
+  const marcaAguaURL =
+    "https://assets.isu.pub/document-structure/221119120331-2636df8d77a0399b11446057db0bdd7d/v1/ee86784e8c89885cab00d66e46522eaf.jpeg";
 
   useEffect(() => {
     const fetchPagos = async () => {
@@ -24,21 +54,23 @@ const ComponentePagos = () => {
     fetchPagos();
   }, []);
 
-  const logoURL =
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Escudo_de_la_universidad_Mariano_G%C3%A1lvez_Guatemala.svg/512px-Escudo_de_la_universidad_Mariano_G%C3%A1lvez_Guatemala.svg.png";
-  const marcaAguaURL =
-    "https://assets.isu.pub/document-structure/221119120331-2636df8d77a0399b11446057db0bdd7d/v1/ee86784e8c89885cab00d66e46522eaf.jpeg";
-
-  const generarPDF = () => {
+  const generarPDF = async () => {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
 
-    doc.addImage(logoURL, "JPEG", pageWidth - 30, 10, 20, 20);
-    doc.addImage(marcaAguaURL, "JPEG", pageWidth / 2 - 50, pageHeight / 2 - 50, 100, 100);
+    try {
+      const logoBase64 = await cargarImagenComoBase64(logoURL);
+      const marcaAguaBase64 = await cargarImagenComoBase64(marcaAguaURL);
+
+      doc.addImage(logoBase64, "PNG", pageWidth - 30, 10, 20, 20);
+      doc.addImage(marcaAguaBase64, "PNG", pageWidth / 2 - 50, pageHeight / 2 - 50, 100, 100);
+    } catch (error) {
+      console.error("Error al cargar imágenes:", error);
+    }
 
     doc.setFontSize(18);
-    doc.text("Lista de Pagos", pageWidth / 2, 20, { align: "center" });
+    doc.text("Reporte de Pagos", pageWidth / 2, 20, { align: "center" });
 
     const startY = 40;
     const encabezados = [["No. Pago", "Nombre del Cliente", "No. Boleta", "Fecha", "Tipo de Pago", "Total (Q)"]];
