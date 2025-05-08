@@ -1,18 +1,15 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { jsPDF } from "jspdf";
 import { obtenerClientes } from "../Services/ServiceCliente";
 
 interface Cliente {
-  Carnet_Cliente: string;
-  Teléfono: string;
-  Dirección: string;
+  carnet: string;
+  nombre: string;
+  apellido: string;
+  direccion: string;
+  carrera: string;
 }
 
-const abrirReportePowerBI = () => {
-  // URL del reporte de Power BI
-  const reportUrl = 'https://app.powerbi.com/reportEmbed?reportId=YOUR_REPORT_ID';
-  window.open(reportUrl, '_blank');  // Abre el reporte en una nueva pestaña
-};
 const ComponenteClientes = () => {
   const [clientes, setClientes] = useState<Cliente[]>([]);
 
@@ -24,23 +21,30 @@ const ComponenteClientes = () => {
     fetchClientes();
   }, []);
 
-  // Función para generar el PDF
+  // Función para generar PDF
   const generarPDF = () => {
     const doc = new jsPDF();
-    doc.text("Lista de Clientes", 10, 10); // Título
+    doc.text("Lista de Clientes", 10, 10);
 
-    // Agregar contenido de la tabla
     let y = 20;
-    doc.text("Carnet Cliente   Teléfono   Dirección", 10, y);
+    doc.text("Carnet  Nombre  Apellido  Dirección  Carrera", 10, y);
     y += 10;
 
     clientes.forEach((cliente) => {
-      doc.text(`${cliente.Carnet_Cliente}   ${cliente.Teléfono}   ${cliente.Dirección}`, 10, y);
+      doc.text(
+        `${cliente.carnet}  ${cliente.nombre}  ${cliente.apellido}  ${cliente.direccion}  ${cliente.carrera}`,
+        10,
+        y
+      );
       y += 10;
     });
 
-    // Descargar el PDF
     doc.save("Clientes.pdf");
+  };
+
+  // URL del Reporte de Power BI (Reemplaza con la URL real)
+  const generarReportePowerBI = () => {
+    window.open("https://app.powerbi.com/view?r=tu_reporte_id", "_blank");
   };
 
   return (
@@ -48,37 +52,39 @@ const ComponenteClientes = () => {
       <h2>Lista de Clientes</h2>
       <table border={1} width="100%">
         <thead>
-          <tr style={{ backgroundColor: "lightgreen" }}>
-            <th>Carnet Cliente</th>
-            <th>Teléfono</th>
+          <tr style={{ backgroundColor: "lightblue" }}>
+            <th>Carnet</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
             <th>Dirección</th>
+            <th>Carrera</th>
           </tr>
         </thead>
         <tbody>
           {clientes.length > 0 ? (
             clientes.map((cliente) => (
-              <tr key={cliente.Carnet_Cliente}>
-                <td>{cliente.Carnet_Cliente}</td>
-                <td>{cliente.Teléfono}</td>
-                <td>{cliente.Dirección}</td>
+              <tr key={cliente.carnet}>
+                <td>{cliente.carnet}</td>
+                <td>{cliente.nombre}</td>
+                <td>{cliente.apellido}</td>
+                <td>{cliente.direccion}</td>
+                <td>{cliente.carrera}</td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan={3}>No hay datos disponibles</td>
+              <td colSpan={5}>No hay datos disponibles</td>
             </tr>
           )}
         </tbody>
       </table>
 
-      {/* Botón para generar PDF */}
       <button className="generar-pdf" onClick={generarPDF}>
         Generar PDF
       </button>
-      <button className="generar-Reporte" onClick={abrirReportePowerBI}>
-  Generar Reporte Power BI
-     </button>
-      
+      <button className="generar-reporte" onClick={generarReportePowerBI}>
+        Generar Reporte Power BI
+      </button>
     </div>
   );
 };
