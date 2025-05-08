@@ -1,4 +1,4 @@
-  import React, { useState } from "react";
+  import  { useState } from "react";
   import ComponentClientes from "./componentes/ComponenteClientes";
   import ComponenteParqueo from "./componentes/ComponenteParqueos";
   import ComponentePagos from "./componentes/ComponentePagos";
