@@ -80,7 +80,7 @@ const ComponentePagos = () => {
 
   return (
     <div>
-      <h2>Listado de Pagos</h2>
+      <h2>Reporte de Pagos</h2>
       <table border={1} width="100%">
         <thead>
           <tr style={{ backgroundColor: "lightblue" }}>

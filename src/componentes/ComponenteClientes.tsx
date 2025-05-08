@@ -35,10 +35,8 @@ const logoURL =
     doc.addImage(logoURL, "JPEG", pageWidth - 30, 10, 20, 20);
     doc.addImage(marcaAguaURL, "JPEG", pageWidth / 2 - 50, pageHeight / 2 - 50, 100, 100);
 
-    doc.setFontSize(18);
-    doc.text("Lista de Pagos", pageWidth / 2, 20, { align: "center" });
+    
 
-    const startY = 40;
     doc.setFontSize(18);
     doc.text("Lista de Clientes", pageWidth / 2, 20, { align: "center" });
 
@@ -70,7 +68,7 @@ const logoURL =
 
   return (
     <div>
-      <h2>Listado de Clientes</h2>
+      <h2>Reporte de Clientes</h2>
       <table border={1} width="100%">
         <thead>
           <tr style={{ backgroundColor: "lightblue" }}>

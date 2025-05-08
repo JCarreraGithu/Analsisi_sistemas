@@ -70,7 +70,7 @@ const ComponenteMultas = () => {
 
   return (
     <div>
-      <h2>Listado de Tipos de Multas</h2>
+      <h2>Reporte de Tipos de Multas</h2>
       <table border={1} width="100%">
         <thead>
           <tr style={{ backgroundColor: "lightblue" }}>
