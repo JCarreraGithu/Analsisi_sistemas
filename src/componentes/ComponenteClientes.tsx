@@ -5,12 +5,16 @@ import autoTable from "jspdf-autotable";
 
 // Definición de la interfaz de Cliente
 interface Cliente {
-  carnet: string;
-  nombre: string;
+  NameUser: string;
   apellido: string;
-  direccion: string;
-  carrera: string;
-}
+  carnet: string;
+  telefono: string;
+  correoelectronico: string;
+  placaVehiculo: string;
+  marca: string;
+  modelo: string;
+  color: string;
+  }
 
 // Función auxiliar para convertir imagen desde URL a Base64
 const cargarImagenComoBase64 = (url: string): Promise<string> => {
@@ -65,13 +69,17 @@ const ComponenteClientes = () => {
     doc.setFontSize(18);
     doc.text("Reporte de Clientes", pageWidth / 2, 20, { align: "center" });
 
-    const encabezados = [["Carnet", "Nombre", "Apellido", "Dirección", "Carrera"]];
+    const encabezados = [["Nombre", "Apellido","No.Carnet","Telefono","Email", "Placa", "Marca", "Modelo","Color"]];
     const datos = clientes.map((cliente) => [
-      cliente.carnet,
-      cliente.nombre,
+      cliente.NameUser,
       cliente.apellido,
-      cliente.direccion,
-      cliente.carrera,
+      cliente.carnet,
+      cliente.telefono,
+      cliente.correoelectronico,
+      cliente.placaVehiculo,
+      cliente.marca,
+      cliente.modelo,
+      cliente.color,
     ]);
 
     autoTable(doc, {
@@ -97,27 +105,35 @@ const ComponenteClientes = () => {
       <table border={1} width="100%">
         <thead>
           <tr style={{ backgroundColor: "lightblue" }}>
-            <th>Carnet</th>
             <th>Nombre</th>
             <th>Apellido</th>
-            <th>Dirección</th>
-            <th>Carrera</th>
+            <th>Carnet</th>
+            <th>Telefono</th>
+            <th>Email</th>
+            <th>Placa</th>
+            <th>Marca</th>
+            <th>Modelo</th>
+            <th>Color</th>
           </tr>
         </thead>
         <tbody>
           {clientes.length > 0 ? (
             clientes.map((cliente) => (
               <tr key={cliente.carnet}>
-                <td>{cliente.carnet}</td>
-                <td>{cliente.nombre}</td>
+                <td>{cliente.NameUser}</td>
                 <td>{cliente.apellido}</td>
-                <td>{cliente.direccion}</td>
-                <td>{cliente.carrera}</td>
+                <td>{cliente.carnet}</td>
+                <td>{cliente.telefono}</td>
+                <td>{cliente.correoelectronico}</td>
+                <td>{cliente.placaVehiculo}</td>
+                <td>{cliente.marca}</td>
+                <td>{cliente.modelo}</td>
+                <td>{cliente.color}</td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan={5}>No hay datos disponibles</td>
+              <td colSpan={9}>No hay datos disponibles</td>
             </tr>
           )}
         </tbody>
