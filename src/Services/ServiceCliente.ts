@@ -7,9 +7,16 @@ export const obtenerClientes = async () => {
 
     // Transformar array de arrays a array de objetos
     const clientes = datos.map((item: any[]) => ({
-      Carnet_Cliente: item[0],
-      Teléfono: item[1],
-      Dirección: item[2],
+      Nombre: item[0],
+      Apellido: item[1],
+      Carnet: item[2],
+      Teléfono: item[3],
+      Email: item[4],
+      Dirección: item[5],
+      Placa: item[6],
+      Marca: item[7],
+      Modelo: item[8],
+      Color: item[9],
     }));
 
     return clientes;
