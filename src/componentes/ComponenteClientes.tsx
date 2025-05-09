@@ -95,9 +95,7 @@ const ComponenteClientes = () => {
     doc.save("Clientes.pdf");
   };
 
-  const generarReportePowerBI = () => {
-    window.open("https://app.powerbi.com/view?r=tu_reporte_id", "_blank");
-  };
+ 
 
   return (
     <div>
@@ -141,9 +139,6 @@ const ComponenteClientes = () => {
 
       <button className="generar-pdf" onClick={generarPDF}>
         Generar PDF
-      </button>
-      <button className="generar-reporte" onClick={generarReportePowerBI}>
-        Generar Reporte Power BI
       </button>
     </div>
   );
