@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { jsPDF } from "jspdf";
+import "jspdf-autotable";
 import { obtenerParqueos } from "../Services/ServiceParqueo";
 
+// Definimos la interfaz para los objetos de parqueo
 interface Parqueo {
-  PAR_PARQUEO_ID: number;
-  PAR_NUMERO_PARQUEO: number;
-  TIP_TIPO_USUARIO_ID: number;
+  PAR_PARQUEO_ID: string;
+  PAR_NUMERO_PARQUEO: string;
+  TIP_TIPO_USUARIO_ID: string;
+  EPAR_ESTADO_ID: string;
   PAR_SECCION: string;
-  EPAR_ESTADO_ID: number;
 }
 
 const ComponenteParqueo = () => {
@@ -21,39 +23,50 @@ const ComponenteParqueo = () => {
     fetchParqueos();
   }, []);
 
-  // Función para generar el PDF
   const generarPDF = () => {
-    const doc = new jsPDF();
-    doc.text("Lista de Parqueos", 10, 10); // Título
+    const doc = new jsPDF("p", "mm", "a4");
 
-    let y = 20;
-    doc.text("ID  Número  Tipo Usuario  Sección  Estado", 10, y);
-    y += 10;
 
-    parqueos.forEach((parqueo) => {
-      doc.text(
-        `${parqueo.PAR_PARQUEO_ID}  ${parqueo.PAR_NUMERO_PARQUEO}  ${parqueo.TIP_TIPO_USUARIO_ID}  ${parqueo.PAR_SECCION}  ${parqueo.EPAR_ESTADO_ID}`,
-        10,
-        y
-      );
-      y += 10;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text("Lista de Parqueos", 15, 15);
+
+    doc.autoTable({
+      startY: 25,
+      head: [["ID Estudiante", "Número Parqueo", "Tipo Jornada", "Estado Jornada", "Sección"]],
+      body: parqueos.map((parqueo) => [
+        parqueo.PAR_PARQUEO_ID,
+        parqueo.PAR_NUMERO_PARQUEO,
+        parqueo.TIP_TIPO_USUARIO_ID,
+        parqueo.EPAR_ESTADO_ID,
+        parqueo.PAR_SECCION,
+      ]),
+      theme: "grid",
+      styles: {
+        fontSize: 12,
+        halign: "center",
+      },
+      headStyles: {
+        fillColor: [0, 128, 0],
+        textColor: [255, 255, 255],
+        fontStyle: "bold",
+      },
     });
 
-    // Descargar el PDF
-    doc.save("Parqueos.pdf");
+    doc.save("Lista_Parqueos.pdf");
   };
 
   return (
     <div>
-      <h2>Lista de Parqueos</h2>
+      <h2>Reporte de Parqueos</h2>
       <table border={1} width="100%">
         <thead>
-          <tr style={{ backgroundColor: "lightgreen" }}>
-            <th>ID</th>
+          <tr style={{ backgroundColor: "lightgreen", color: "white" }}>
+            <th>ID Estudiante</th>
             <th>Número Parqueo</th>
-            <th>Tipo Usuario</th>
+            <th>Tipo Jornada</th>
+            <th>Estado Jornada</th>
             <th>Sección</th>
-            <th>Estado</th>
           </tr>
         </thead>
         <tbody>
@@ -63,8 +76,8 @@ const ComponenteParqueo = () => {
                 <td>{parqueo.PAR_PARQUEO_ID}</td>
                 <td>{parqueo.PAR_NUMERO_PARQUEO}</td>
                 <td>{parqueo.TIP_TIPO_USUARIO_ID}</td>
-                <td>{parqueo.PAR_SECCION}</td>
                 <td>{parqueo.EPAR_ESTADO_ID}</td>
+                <td>{parqueo.PAR_SECCION}</td>
               </tr>
             ))
           ) : (
@@ -76,10 +89,8 @@ const ComponenteParqueo = () => {
       </table>
 
       <button className="generar-pdf" onClick={generarPDF}>
-        Generar PDF
+        Generar PDF con Formato
       </button>
-      <button className="generar-Reporte">Generar Reporte Power BI</button>
-
     </div>
   );
 };
