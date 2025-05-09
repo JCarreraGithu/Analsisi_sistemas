@@ -64,9 +64,7 @@ const ComponenteMultas = () => {
     doc.save("TiposDeMultas-MIUMG.pdf");
   };
 
-  const generarReportePowerBI = () => {
-    window.open("https://app.powerbi.com/view?r=tu_reporte_id", "_blank");
-  };
+  
 
   return (
     <div>
@@ -99,9 +97,7 @@ const ComponenteMultas = () => {
       <button className="generar-pdf" onClick={generarPDF}>
         Generar PDF
       </button>
-      <button className="generar-reporte" onClick={generarReportePowerBI}>
-        Generar Reporte Power BI
-      </button>
+      
     </div>
   );
 };
