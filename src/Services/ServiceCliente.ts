@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const obtenerClientes = async () => {
   try {
-    const response = await axios.get("http://localhost:3000/getData");
+    const response = await axios.get("http://localhost:3000/api/parusuario/reporte");
     const datos = response.data;
 
     // Transformar array de arrays a array de objetos
