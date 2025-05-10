@@ -2,21 +2,22 @@ import axios from "axios";
 
 export const obtenerClientes = async () => {
   try {
-    const response = await axios.get("http://localhost:3000/api/parusuario/reporte");
+    const response = await axios.get("http://192.168.0.200:3000/api/parusuario/reporte");
     const datos = response.data;
 
     // Transformar array de arrays a array de objetos
     const clientes = datos.map((item: any[]) => ({
-      Nombre: item[0],
-      Apellido: item[1],
-      Carnet: item[2],
-      Teléfono: item[3],
-      Email: item[4],
-      Dirección: item[5],
-      Placa: item[6],
-      Marca: item[7],
-      Modelo: item[8],
-      Color: item[9],
+      NombreUsuario: item[0],
+      Nombre: item[1],
+      Apellido: item[2],
+      Carnet: item[3],
+      Teléfono: item[4],
+      Email: item[5],
+      Dirección: item[6],
+      Placa: item[7],
+      Marca: item[8],
+      Modelo: item[9],
+      Color: item[10],
     }));
 
     return clientes;

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // IP de la API para obtener los pagos
-const API_URL = "http://192.168.182.177:3001/pagos"; 
+const API_URL = "http://192.168.0.65:3001/comprobante"; 
 
 export const obtenerPagos = async () => {
   try {

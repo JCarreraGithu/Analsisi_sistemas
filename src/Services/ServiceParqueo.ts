@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api/disponibilidad_parqueo"; // Ajusta la URL según tu backend
+const API_URL = "http://192.168.0.13:3000/api/disponibilidad_parqueo"; // Ajusta la URL según tu backend
 
 export const obtenerParqueos = async () => {
   try {

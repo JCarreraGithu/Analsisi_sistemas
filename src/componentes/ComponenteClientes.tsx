@@ -6,6 +6,7 @@ import autoTable from "jspdf-autotable";
 // Definición de la interfaz de Cliente
 interface Cliente {
   NameUser: string;
+  Name: string;
   apellido: string;
   carnet: string;
   telefono: string;
@@ -69,9 +70,10 @@ const ComponenteClientes = () => {
     doc.setFontSize(18);
     doc.text("Reporte de Clientes", pageWidth / 2, 20, { align: "center" });
 
-    const encabezados = [["Nombre", "Apellido","No.Carnet","Telefono","Email", "Placa", "Marca", "Modelo","Color"]];
+    const encabezados = [["Nombre Usuario","Nombre", "Apellido","No.Carnet","Telefono","Email", "Placa", "Marca", "Modelo","Color"]];
     const datos = clientes.map((cliente) => [
       cliente.NameUser,
+      cliente.Name,
       cliente.apellido,
       cliente.carnet,
       cliente.telefono,
@@ -103,6 +105,7 @@ const ComponenteClientes = () => {
       <table border={1} width="100%">
         <thead>
           <tr style={{ backgroundColor: "lightblue" }}>
+            <th>NombreUsuario</th>
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Carnet</th>
@@ -118,6 +121,7 @@ const ComponenteClientes = () => {
           {clientes.length > 0 ? (
             clientes.map((cliente) => (
               <tr key={cliente.carnet}>
+                <td>{cliente.Name}</td>
                 <td>{cliente.NameUser}</td>
                 <td>{cliente.apellido}</td>
                 <td>{cliente.carnet}</td>
@@ -131,7 +135,7 @@ const ComponenteClientes = () => {
             ))
           ) : (
             <tr>
-              <td colSpan={9}>No hay datos disponibles</td>
+              <td colSpan={10}>No hay datos disponibles</td>
             </tr>
           )}
         </tbody>
