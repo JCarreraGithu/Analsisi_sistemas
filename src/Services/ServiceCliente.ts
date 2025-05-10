@@ -1,28 +1,41 @@
 import axios from "axios";
 
+const API_URL = "http://192.168.0.200:3000/api/parusuario/reporte"; 
+
 export const obtenerClientes = async () => {
   try {
-    const response = await axios.get("http://192.168.0.200:3000/api/parusuario/reporte");
-    const datos = response.data;
-
-    // Transformar array de arrays a array de objetos
-    const clientes = datos.map((item: any[]) => ({
-      NombreUsuario: item[0],
-      Nombre: item[1],
-      Apellido: item[2],
-      Carnet: item[3],
-      Teléfono: item[4],
-      Email: item[5],
-      Dirección: item[6],
-      Placa: item[7],
-      Marca: item[8],
-      Modelo: item[9],
-      Color: item[10],
-    }));
-
-    return clientes;
+    const response = await axios.get(API_URL);
+    if (Array.isArray(response.data)) {
+        return response.data; // Devuelve los datos si es un array
+      } else {
+        console.error("La respuesta no es un array:", response.data);
+        return []; // Retorna un array vacío si no es un array
+      }
+    //return response.data; // Devuelve los datos de la API
   } catch (error) {
-    console.error("Error obteniendo clientes:", error);
+    console.error("Error obteniendo Clientes:", error);
     return [];
   }
 };
+
+
+/*import axios from "axios";
+
+const API_URL = "http://192.168.0.200:3000/api/parusuario/reporte"; 
+
+export const obtenerClientes = async () => {
+  try {
+    const response = await axios.get(API_URL);
+    if (Array.isArray(response.data.clientes)) {
+      return response.data.clientes; // Devuelve el array de clientes
+    } else {
+      console.error("La respuesta no contiene un array válido:", response.data);
+      return [];
+    }
+  } catch (error) {
+    console.error("Error obteniendo Clientes:", error);
+    return [];
+  }
+};
+
+*/

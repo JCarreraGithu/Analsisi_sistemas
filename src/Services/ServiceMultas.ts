@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 //ip actualizada para que se conecte a la api de multas
-const API_URL = "http://192.168.0.65:3001/tipo_multa"; 
+const API_URL = "http://192.168.0.43:3001/tipo_multa"; 
 
 export const obtenerMultas = async () => {
   try {
@@ -10,6 +10,7 @@ export const obtenerMultas = async () => {
     if (Array.isArray(response.data)) {
         return response.data; // Devuelve los datos si es un array
       } else {
+        
         console.error("La respuesta no es un array:", response.data);
         return []; // Retorna un array vacío si no es un array
       }

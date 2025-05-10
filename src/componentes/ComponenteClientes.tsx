@@ -5,12 +5,12 @@ import autoTable from "jspdf-autotable";
 
 // Definición de la interfaz de Cliente
 interface Cliente {
-  NameUser: string;
-  Name: string;
+  nombreUsuario: string;
+  nombre: string;
   apellido: string;
   carnet: string;
   telefono: string;
-  correoelectronico: string;
+  correoElectronico: string;
   placaVehiculo: string;
   marca: string;
   modelo: string;
@@ -72,12 +72,12 @@ const ComponenteClientes = () => {
 
     const encabezados = [["Nombre Usuario","Nombre", "Apellido","No.Carnet","Telefono","Email", "Placa", "Marca", "Modelo","Color"]];
     const datos = clientes.map((cliente) => [
-      cliente.NameUser,
-      cliente.Name,
+      cliente.nombreUsuario,
+      cliente.nombre,
       cliente.apellido,
       cliente.carnet,
       cliente.telefono,
-      cliente.correoelectronico,
+      cliente.correoElectronico,
       cliente.placaVehiculo,
       cliente.marca,
       cliente.modelo,
@@ -121,12 +121,12 @@ const ComponenteClientes = () => {
           {clientes.length > 0 ? (
             clientes.map((cliente) => (
               <tr key={cliente.carnet}>
-                <td>{cliente.Name}</td>
-                <td>{cliente.NameUser}</td>
+                <td>{cliente.nombreUsuario}</td>
+                <td>{cliente.nombre}</td>
                 <td>{cliente.apellido}</td>
                 <td>{cliente.carnet}</td>
                 <td>{cliente.telefono}</td>
-                <td>{cliente.correoelectronico}</td>
+                <td>{cliente.correoElectronico}</td>
                 <td>{cliente.placaVehiculo}</td>
                 <td>{cliente.marca}</td>
                 <td>{cliente.modelo}</td>
