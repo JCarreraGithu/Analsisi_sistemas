@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import { jsPDF } from "jspdf";
-import "jspdf-autotable";
-import { obtenerParqueos } from "../Services/ServiceParqueo";
 import autoTable from "jspdf-autotable";
+import { obtenerParqueos } from "../Services/ServiceParqueo";
 
-// Definimos la interfaz para los objetos de parqueo
 interface Parqueo {
   JOR_JORNADA_ID: string;
   PAR_NUMERO_PARQUEO: string;
@@ -17,6 +15,13 @@ interface Parqueo {
 
 const ComponenteParqueo = () => {
   const [parqueos, setParqueos] = useState<Parqueo[]>([]);
+  const [filtroSeccion, setFiltroSeccion] = useState<string>("todos");
+  const [filtroJornada, setFiltroJornada] = useState<string>("todos");
+
+  const logoURL =
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Escudo_de_la_universidad_Mariano_G%C3%A1lvez_Guatemala.svg/512px-Escudo_de_la_universidad_Mariano_G%C3%A1lvez_Guatemala.svg.png";
+  const marcaAguaURL =
+    "https://assets.isu.pub/document-structure/221119120331-2636df8d77a0399b11446057db0bdd7d/v1/ee86784e8c89885cab00d66e46522eaf.jpeg";
 
   useEffect(() => {
     const fetchParqueos = async () => {
@@ -26,8 +31,11 @@ const ComponenteParqueo = () => {
     fetchParqueos();
   }, []);
 
-  const logoURL = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Escudo_de_la_universidad_Mariano_G%C3%A1lvez_Guatemala.svg/512px-Escudo_de_la_universidad_Mariano_G%C3%A1lvez_Guatemala.svg.png";
-  const marcaAguaURL = "https://assets.isu.pub/document-structure/221119120331-2636df8d77a0399b11446057db0bdd7d/v1/ee86784e8c89885cab00d66e46522eaf.jpeg";
+  const parqueosFiltrados = parqueos.filter(
+    (p) =>
+      (filtroSeccion === "todos" || p.PAR_SECCION === filtroSeccion) &&
+      (filtroJornada === "todos" || p.JOR_TIPO === filtroJornada)
+  );
 
   const cargarImagenComoBase64 = (url: string): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -40,12 +48,10 @@ const ComponenteParqueo = () => {
         canvas.height = img.height;
         const ctx = canvas.getContext("2d");
         if (!ctx) return reject("No se pudo obtener el contexto del canvas.");
-
-        // Fondo blanco para evitar fondo negro en JPEG
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0);
-        resolve(canvas.toDataURL("image/png")); // Usa PNG para mantener transparencia
+        resolve(canvas.toDataURL("image/png"));
       };
       img.onerror = () => reject("No se pudo cargar la imagen desde la URL.");
     });
@@ -68,35 +74,27 @@ const ComponenteParqueo = () => {
       doc.setFontSize(18);
       doc.text("Reporte de Parqueos", pageWidth / 2, 20, { align: "center" });
 
-      const startY = 40;
-      const encabezados = [["ID Estudiante", "Número Parqueo", "Tipo Jornada", "Estado Jornada", "Sección","Usuario Reservo","Reservacion"]];
-      const datos = parqueos.map((p) => [
+      const encabezados = [
+        ["ID Estudiante", "Número Parqueo", "Tipo Jornada", "Estado Jornada", "Sección", "Usuario Reservó", "Reservación"],
+      ];
+      const datos = parqueosFiltrados.map((p) => [
         p.JOR_JORNADA_ID,
         p.PAR_NUMERO_PARQUEO,
         p.JOR_TIPO,
         p.EJOR_ESTADO_ID,
         p.PAR_SECCION,
         p.RES_ID_USUARIO,
-        p.RES_RESERVACION_ID,      ]);
+        p.RES_RESERVACION_ID,
+      ]);
 
       autoTable(doc, {
-        startY,
+        startY: 40,
         head: encabezados,
         body: datos,
-        styles: {
-          fontSize: 8,
-          textColor: "#000000",
-        },
-        headStyles: {
-          fillColor: "#704a35",
-          textColor: "#ffffff",
-          halign: "center",
-        },
-        alternateRowStyles: {
-          fillColor: "#edbc8b",
-        },
+        styles: { fontSize: 8, textColor: "#000000" },
+        headStyles: { fillColor: "#704a35", textColor: "#ffffff", halign: "center" },
+        alternateRowStyles: { fillColor: "#edbc8b" },
         theme: "striped",
-        margin: { top: 20 },
       });
 
       doc.save("Lista_Parqueos.pdf");
@@ -106,44 +104,68 @@ const ComponenteParqueo = () => {
   };
 
   return (
-    <div>
-      <h2>Lista de Parqueos</h2>
-      <table border={1} width="100%">
+    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+      <h2 style={{ textAlign: "center", color: "#4a4a4a" }}>Lista de Parqueos</h2>
+
+      <div style={{ display: "flex", justifyContent: "center", gap: "10px", marginBottom: "20px" }}>
+        <label><strong>Sección:</strong></label>
+        <select onChange={(e) => setFiltroSeccion(e.target.value)} style={{ padding: "5px" }}>
+          <option value="todos">Todos</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="D">D</option>
+        </select>
+
+        <label><strong>Jornada:</strong></label>
+        <select onChange={(e) => setFiltroJornada(e.target.value)} style={{ padding: "5px" }}>
+          <option value="todos">Todos</option>
+          <option value="MATUTINA">MATUTINA</option>
+          <option value="VESPERTINA">VESPERTINA</option>
+          <option value="NOCTURNA">NOCTURNA</option>
+          <option value="COMPLETA SABADO">COMPLETA SABADO</option>
+          <option value="COMPLETA DOMINGO">COMPLETA DOMINGO</option>
+        </select>
+      </div>
+
+      <table border={1} width="100%" style={{ borderCollapse: "collapse", textAlign: "center" }}>
         <thead>
-          <tr style={{ backgroundColor: "lightblue" }}>
+          <tr style={{ backgroundColor: "#4a90e2", color: "#fff" }}>
             <th>ID Estudiante</th>
             <th>Número Parqueo</th>
             <th>Tipo Jornada</th>
             <th>Estado Jornada</th>
             <th>Sección</th>
             <th>Usuario</th>
-            <th>Reservacion</th>
+            <th>Reservación</th>
           </tr>
         </thead>
         <tbody>
-          {parqueos.length > 0 ? (
-            parqueos.map((parqueo) => (
-              <tr key={parqueo.JOR_JORNADA_ID}>
-                <td>{parqueo.JOR_JORNADA_ID}</td>
-                <td>{parqueo.PAR_NUMERO_PARQUEO}</td>
-                <td>{parqueo.JOR_TIPO}</td>
-                <td>{parqueo.EJOR_ESTADO_ID}</td>
-                <td>{parqueo.PAR_SECCION}</td>
-                <td>{parqueo.RES_ID_USUARIO}</td>
-                <td>{parqueo.RES_RESERVACION_ID}</td>
-                </tr>               
+          {parqueosFiltrados.length > 0 ? (
+            parqueosFiltrados.map((p) => (
+              <tr key={p.JOR_JORNADA_ID}>
+                <td>{p.JOR_JORNADA_ID}</td>
+                <td>{p.PAR_NUMERO_PARQUEO}</td>
+                <td>{p.JOR_TIPO}</td>
+                <td>{p.EJOR_ESTADO_ID}</td>
+                <td>{p.PAR_SECCION}</td>
+                <td>{p.RES_ID_USUARIO}</td>
+                <td>{p.RES_RESERVACION_ID}</td>
+              </tr>
             ))
           ) : (
             <tr>
-              <td colSpan={5}>No hay datos disponibles</td>
+              <td colSpan={7}>No hay datos disponibles</td>
             </tr>
           )}
         </tbody>
       </table>
 
-      <button className="generar-pdf" onClick={generarPDF}>
-        Generar PDF con Formato
-      </button>
+      <div style={{ textAlign: "center", marginTop: "20px" }}>
+        <button onClick={generarPDF} style={{ padding: "10px 20px", backgroundColor: "#704a35", color: "#fff", border: "none", borderRadius: "5px", cursor: "pointer" }}>
+          Generar PDF con Formato
+        </button>
+      </div>
     </div>
   );
 };
