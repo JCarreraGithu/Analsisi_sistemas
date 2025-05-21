@@ -6,11 +6,13 @@ import autoTable from "jspdf-autotable";
 
 // Definimos la interfaz para los objetos de parqueo
 interface Parqueo {
-  PAR_PARQUEO_ID: string;
+  JOR_JORNADA_ID: string;
   PAR_NUMERO_PARQUEO: string;
-  TIP_TIPO_USUARIO_ID: string;
-  EPAR_ESTADO_ID: string;
+  JOR_TIPO: string;
+  EJOR_ESTADO_ID: string;
   PAR_SECCION: string;
+  RES_ID_USUARIO: string;
+  RES_RESERVACION_ID: string;
 }
 
 const ComponenteParqueo = () => {
@@ -67,14 +69,15 @@ const ComponenteParqueo = () => {
       doc.text("Reporte de Parqueos", pageWidth / 2, 20, { align: "center" });
 
       const startY = 40;
-      const encabezados = [["ID Estudiante", "Número Parqueo", "Tipo Jornada", "Estado Jornada", "Sección"]];
+      const encabezados = [["ID Estudiante", "Número Parqueo", "Tipo Jornada", "Estado Jornada", "Sección","Usuario Reservo","Reservacion"]];
       const datos = parqueos.map((p) => [
-        p.PAR_PARQUEO_ID,
+        p.JOR_JORNADA_ID,
         p.PAR_NUMERO_PARQUEO,
-        p.TIP_TIPO_USUARIO_ID,
-        p.EPAR_ESTADO_ID,
+        p.JOR_TIPO,
+        p.EJOR_ESTADO_ID,
         p.PAR_SECCION,
-      ]);
+        p.RES_ID_USUARIO,
+        p.RES_RESERVACION_ID,      ]);
 
       autoTable(doc, {
         startY,
@@ -113,18 +116,22 @@ const ComponenteParqueo = () => {
             <th>Tipo Jornada</th>
             <th>Estado Jornada</th>
             <th>Sección</th>
+            <th>Usuario</th>
+            <th>Reservacion</th>
           </tr>
         </thead>
         <tbody>
           {parqueos.length > 0 ? (
             parqueos.map((parqueo) => (
-              <tr key={parqueo.PAR_PARQUEO_ID}>
-                <td>{parqueo.PAR_PARQUEO_ID}</td>
+              <tr key={parqueo.JOR_JORNADA_ID}>
+                <td>{parqueo.JOR_JORNADA_ID}</td>
                 <td>{parqueo.PAR_NUMERO_PARQUEO}</td>
-                <td>{parqueo.TIP_TIPO_USUARIO_ID}</td>
-                <td>{parqueo.EPAR_ESTADO_ID}</td>
+                <td>{parqueo.JOR_TIPO}</td>
+                <td>{parqueo.EJOR_ESTADO_ID}</td>
                 <td>{parqueo.PAR_SECCION}</td>
-              </tr>
+                <td>{parqueo.RES_ID_USUARIO}</td>
+                <td>{parqueo.RES_RESERVACION_ID}</td>
+                </tr>               
             ))
           ) : (
             <tr>
